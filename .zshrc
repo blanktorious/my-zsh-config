@@ -1,8 +1,17 @@
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
 
 # Path to your Oh My Zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
+
+export HOMEBREW_NO_AUTO_UPDATE=1
 
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time Oh My Zsh is loaded, in which case,
@@ -105,11 +114,56 @@ source $ZSH/oh-my-zsh.sh
 alias la='ls -ahl'
 alias g='git'
 alias home='cd ~'
+alias xys='cd ~/Xystem'
 alias main='cd /'
-alias reload='source ~/.zshrc'
+
+#zsh
+alias zsh-reload='source ~/.zshrc'
+alias zsh-restart='exec zsh'
+alias zsh-settings='code ~/.zshrc'
+
+#kubectl
+alias k='kubectl'
+alias k-uc='kubectl config use-context'
+alias k-c='kubectl config get-contexts'
+alias k-n='kubectl get namespace'
+
+#terraform
+alias tf='terraform'
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 #case-sensitive off
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
+
+autoload -U +X bashcompinit && bashcompinit
+complete -o nospace -C /usr/bin/terraform terraform
+export PATH="$HOME/.tfenv/bin:$PATH"
+#eval "$(/opt/homebrew/bin/brew shellenv)"
+#eval "$(/opt/homebrew/bin/brew shellenv)"
+#eval "$(/opt/homebrew/bin/brew shellenv)"
+
+# fnm
+FNM_PATH="/home/blanktorious/.local/share/fnm"
+if [ -d "$FNM_PATH" ]; then
+  export PATH="/home/blanktorious/.local/share/fnm:$PATH"
+  eval "`fnm env`"
+fi
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+# opencode
+export PATH=/home/blanktorious/.opencode/bin:$PATH
+export PATH="$HOME/.local/bin:$PATH"
+
+# SSH agent - start once per session, keys cached on first use via AddKeysToAgent
+if [ -z "$SSH_AUTH_SOCK" ]; then
+  eval "$(ssh-agent -s)" > /dev/null 2>&1
+fi
+
+# Xystem alias
+alias xai="cd ~/Xystem && claude"
